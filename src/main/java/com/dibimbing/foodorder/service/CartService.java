@@ -1,7 +1,6 @@
 package com.dibimbing.foodorder.service;
 
-import com.dibimbing.foodorder.dto.CartRequest;
-import com.dibimbing.foodorder.dto.CartResponse;
+import com.dibimbing.foodorder.dto.CartDTO;
 import com.dibimbing.foodorder.entity.Cart;
 import com.dibimbing.foodorder.entity.Menu;
 import com.dibimbing.foodorder.entity.User;
@@ -21,14 +20,14 @@ public class CartService {
     private final CartRepository cartRepository;
     private final MenuRepository menuRepository;
 
-    public List<CartResponse> getUserCart(User user) {
+    public List<CartDTO.CartResponse> getUserCart(User user) {
         return cartRepository.findByUser(user).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public CartResponse addToCart(User user, CartRequest request) {
+    public CartDTO.CartResponse addToCart(User user, CartDTO.CartRequest request) {
         Menu menu = menuRepository.findById(request.getMenuId())
                 .orElseThrow(() -> new RuntimeException("Menu not found"));
 
@@ -47,7 +46,7 @@ public class CartService {
     }
 
     @Transactional
-    public CartResponse updateCartItem(User user, Long cartId, Integer quantity) {
+    public CartDTO.CartResponse updateCartItem(User user, Long cartId, Integer quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
@@ -71,8 +70,8 @@ public class CartService {
         cartRepository.delete(cart);
     }
 
-    private CartResponse mapToResponse(Cart cart) {
-        return CartResponse.builder()
+    private CartDTO.CartResponse mapToResponse(Cart cart) {
+        return CartDTO.CartResponse.builder()
                 .id(cart.getId())
                 .menuId(cart.getMenu().getId())
                 .menuName(cart.getMenu().getName())

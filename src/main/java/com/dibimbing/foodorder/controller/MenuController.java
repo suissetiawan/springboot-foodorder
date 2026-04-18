@@ -1,7 +1,7 @@
 package com.dibimbing.foodorder.controller;
 
-import com.dibimbing.foodorder.dto.MenuRequest;
-import com.dibimbing.foodorder.entity.Menu;
+import com.dibimbing.foodorder.dto.BaseResponse;
+import com.dibimbing.foodorder.dto.MenuDTO;
 import com.dibimbing.foodorder.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,33 +18,57 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
-    public ResponseEntity<List<Menu>> getAllMenus() {
-        return ResponseEntity.ok(menuService.getAllMenus());
+    public ResponseEntity<BaseResponse<List<MenuDTO.MenuResponse>>> getAllMenus() {
+        return ResponseEntity.ok(
+                BaseResponse.<List<MenuDTO.MenuResponse>>builder()
+                        .message("Menus retrieved successfully")
+                        .data(menuService.getAllMenus())
+                        .build()
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Menu> getMenuById(@PathVariable Long id) {
-        return ResponseEntity.ok(menuService.getMenuById(id));
+    public ResponseEntity<BaseResponse<MenuDTO.MenuResponse>> getMenuById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                BaseResponse.<MenuDTO.MenuResponse>builder()
+                        .message("Menu retrieved successfully")
+                        .data(menuService.getMenuById(id))
+                        .build()
+        );
     }
 
     @PostMapping
-    public ResponseEntity<Menu> createMenu(
-            @Valid @RequestBody MenuRequest request
+    public ResponseEntity<BaseResponse<MenuDTO.MenuResponse>> createMenu(
+            @Valid @RequestBody MenuDTO.MenuRequest request
     ) {
-        return ResponseEntity.ok(menuService.createMenu(request));
+        return ResponseEntity.ok(
+                BaseResponse.<MenuDTO.MenuResponse>builder()
+                        .message("Menu created successfully")
+                        .data(menuService.createMenu(request))
+                        .build()
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Menu> updateMenu(
+    public ResponseEntity<BaseResponse<MenuDTO.MenuResponse>> updateMenu(
             @PathVariable Long id,
-            @Valid @RequestBody MenuRequest request
+            @Valid @RequestBody MenuDTO.MenuRequest request
     ) {
-        return ResponseEntity.ok(menuService.updateMenu(id, request));
+        return ResponseEntity.ok(
+                BaseResponse.<MenuDTO.MenuResponse>builder()
+                        .message("Menu updated successfully")
+                        .data(menuService.updateMenu(id, request))
+                        .build()
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<Void>> deleteMenu(@PathVariable Long id) {
         menuService.deleteMenu(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                BaseResponse.<Void>builder()
+                        .message("Menu deleted successfully")
+                        .build()
+        );
     }
 }

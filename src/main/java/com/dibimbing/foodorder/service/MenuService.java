@@ -1,12 +1,13 @@
 package com.dibimbing.foodorder.service;
 
-import com.dibimbing.foodorder.dto.MenuRequest;
+import com.dibimbing.foodorder.dto.MenuDTO;
 import com.dibimbing.foodorder.entity.Menu;
 import com.dibimbing.foodorder.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -14,37 +15,54 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
 
-    public List<Menu> getAllMenus() {
-        return menuRepository.findAll();
+    public List<MenuDTO.MenuResponse> getAllMenus() {
+        return menuRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    public Menu getMenuById(Long id) {
-        return menuRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Menu not found"));
+    public MenuDTO.MenuResponse getMenuById(Long id) {
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu not found with id: " + id));
+        return mapToResponse(menu);
     }
 
-    public Menu createMenu(MenuRequest request) {
+    public MenuDTO.MenuResponse createMenu(MenuDTO.MenuRequest request) {
         Menu menu = new Menu();
-        return updateMenuFields(menu, request);
+        return saveMenu(menu, request);
     }
 
-    public Menu updateMenu(Long id, MenuRequest request) {
-        Menu menu = getMenuById(id);
-        return updateMenuFields(menu, request);
+    public MenuDTO.MenuResponse updateMenu(Long id, MenuDTO.MenuRequest request) {
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu not found"));
+        return saveMenu(menu, request);
     }
 
     public void deleteMenu(Long id) {
-        Menu menu = getMenuById(id);
-        menuRepository.delete(menu);
+        menuRepository.deleteById(id);
     }
 
-    private Menu updateMenuFields(Menu menu, MenuRequest request) {
+    private MenuDTO.MenuResponse saveMenu(Menu menu, MenuDTO.MenuRequest request) {
         menu.setName(request.getName());
         menu.setDescription(request.getDescription());
         menu.setPrice(request.getPrice());
         menu.setCategory(request.getCategory());
         menu.setStock(request.getStock());
         menu.setImageUrl(request.getImageUrl());
-        return menuRepository.save(menu);
+        return mapToResponse(menuRepository.save(menu));
+    }
+
+    private MenuDTO.MenuResponse mapToResponse(Menu menu) {
+        return MenuDTO.MenuResponse.builder()
+                .id(menu.getId())
+                .name(menu.getName())
+                .description(menu.getDescription())
+                .price(menu.getPrice())
+                .category(menu.getCategory())
+                .stock(menu.getStock())
+                .imageUrl(menu.getImageUrl())
+                .createdAt(menu.getCreatedAt())
+                .updatedAt(menu.getUpdatedAt())
+                .build();
     }
 }

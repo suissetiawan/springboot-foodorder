@@ -1,8 +1,7 @@
 package com.dibimbing.foodorder.controller;
 
-import com.dibimbing.foodorder.dto.AuthRequest;
-import com.dibimbing.foodorder.dto.AuthResponse;
-import com.dibimbing.foodorder.dto.RegisterRequest;
+import com.dibimbing.foodorder.dto.AuthDTO;
+import com.dibimbing.foodorder.dto.BaseResponse;
 import com.dibimbing.foodorder.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +19,22 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
-            @Valid @RequestBody RegisterRequest request
-    ) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<BaseResponse<AuthDTO.RegisterResponse>> register(
+            @Valid @RequestBody AuthDTO.RegisterRequest request) {
+        return ResponseEntity.ok(
+                BaseResponse.<AuthDTO.RegisterResponse>builder()
+                        .message("User registered successfully")
+                        .data(authService.register(request))
+                        .build());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> authenticate(
-            @Valid @RequestBody AuthRequest request
-    ) {
-        return ResponseEntity.ok(authService.authenticate(request));
+    public ResponseEntity<BaseResponse<AuthDTO.LoginResponse>> authenticate(
+            @Valid @RequestBody AuthDTO.LoginRequest request) {
+        return ResponseEntity.ok(
+                BaseResponse.<AuthDTO.LoginResponse>builder()
+                        .message("Login successful")
+                        .data(authService.authenticate(request))
+                        .build());
     }
 }

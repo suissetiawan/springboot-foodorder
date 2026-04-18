@@ -1,6 +1,7 @@
 package com.dibimbing.foodorder.controller;
 
-import com.dibimbing.foodorder.dto.OrderResponse;
+import com.dibimbing.foodorder.dto.BaseResponse;
+import com.dibimbing.foodorder.dto.OrderDTO;
 import com.dibimbing.foodorder.entity.User;
 import com.dibimbing.foodorder.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +22,26 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/checkout")
-    public ResponseEntity<OrderResponse> checkout(
+    public ResponseEntity<BaseResponse<OrderDTO.OrderResponse>> checkout(
             @AuthenticationPrincipal User user
     ) {
-        return ResponseEntity.ok(orderService.checkout(user));
+        return ResponseEntity.ok(
+                BaseResponse.<OrderDTO.OrderResponse>builder()
+                        .message("Checkout successful")
+                        .data(orderService.checkout(user))
+                        .build()
+        );
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<OrderResponse>> getOrderHistory(
+    public ResponseEntity<BaseResponse<List<OrderDTO.OrderResponse>>> getOrderHistory(
             @AuthenticationPrincipal User user
     ) {
-        return ResponseEntity.ok(orderService.getUserOrderHistory(user));
+        return ResponseEntity.ok(
+                BaseResponse.<List<OrderDTO.OrderResponse>>builder()
+                        .message("Order history retrieved successfully")
+                        .data(orderService.getUserOrderHistory(user))
+                        .build()
+        );
     }
 }

@@ -1,8 +1,6 @@
 package com.dibimbing.foodorder.service;
 
-import com.dibimbing.foodorder.dto.AuthRequest;
-import com.dibimbing.foodorder.dto.AuthResponse;
-import com.dibimbing.foodorder.dto.RegisterRequest;
+import com.dibimbing.foodorder.dto.AuthDTO;
 import com.dibimbing.foodorder.entity.User;
 import com.dibimbing.foodorder.enums.UserRole;
 import com.dibimbing.foodorder.repository.UserRepository;
@@ -23,7 +21,7 @@ public class AuthService {
     private final JwtGenerator jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthDTO.RegisterResponse register(AuthDTO.RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
@@ -39,13 +37,15 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .build();
+        AuthDTO.RegisterResponse response = new AuthDTO.RegisterResponse();
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+
+        return response;
     }
 
-    public AuthResponse authenticate(AuthRequest request) {
+    public AuthDTO.LoginResponse authenticate(AuthDTO.LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -55,8 +55,13 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         String jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .build();
+
+        AuthDTO.LoginResponse response = new AuthDTO.LoginResponse();
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setToken(jwtToken);
+
+        return response;
     }
 }
