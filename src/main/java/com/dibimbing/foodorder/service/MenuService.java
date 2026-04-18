@@ -17,14 +17,18 @@ public class MenuService {
     private final MenuRepository menuRepository;
 
     public List<MenuDTO.MenuResponse> getAllMenus() {
-        return menuRepository.findAll().stream()
+        List<Menu> menus = menuRepository.findAll();
+        if (menus.isEmpty()) {
+            throw new ResourceNotFoundException("Menu is empty");
+        }
+        return menus.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     public MenuDTO.MenuResponse getMenuById(Long id) {
         Menu menu = menuRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Menu not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Menu not found"));
         return mapToResponse(menu);
     }
 

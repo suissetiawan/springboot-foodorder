@@ -47,7 +47,7 @@ public class OrderService {
 
         for (Cart cartItem : cartItems) {
             Menu menu = cartItem.getMenu();
-            
+
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(savedOrder);
             orderItem.setMenu(menu);

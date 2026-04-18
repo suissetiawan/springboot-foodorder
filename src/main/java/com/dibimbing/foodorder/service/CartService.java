@@ -23,7 +23,11 @@ public class CartService {
     private final MenuRepository menuRepository;
 
     public List<CartDTO.CartResponse> getUserCart(User user) {
-        return cartRepository.findByUser(user).stream()
+        List<Cart> carts = cartRepository.findByUser(user);
+        if (carts.isEmpty()) {
+            throw new ResourceNotFoundException("Cart is empty");
+        }
+        return carts.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

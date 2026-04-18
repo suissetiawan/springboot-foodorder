@@ -5,6 +5,8 @@ import com.dibimbing.foodorder.dto.OrderDTO;
 import com.dibimbing.foodorder.entity.User;
 import com.dibimbing.foodorder.service.OrderService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,25 +25,21 @@ public class OrderController {
 
     @PostMapping("/checkout")
     public ResponseEntity<BaseResponse<OrderDTO.OrderResponse>> checkout(
-            @AuthenticationPrincipal User user
-    ) {
-        return ResponseEntity.ok(
+            @AuthenticationPrincipal User user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
                 BaseResponse.<OrderDTO.OrderResponse>builder()
-                        .message("Checkout successful")
+                        .message("Success checkout")
                         .data(orderService.checkout(user))
-                        .build()
-        );
+                        .build());
     }
 
-    @GetMapping("/history")
+    @GetMapping("")
     public ResponseEntity<BaseResponse<List<OrderDTO.OrderResponse>>> getOrderHistory(
-            @AuthenticationPrincipal User user
-    ) {
+            @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(
                 BaseResponse.<List<OrderDTO.OrderResponse>>builder()
-                        .message("Order history retrieved successfully")
+                        .message("Success get orders history")
                         .data(orderService.getUserOrderHistory(user))
-                        .build()
-        );
+                        .build());
     }
 }
