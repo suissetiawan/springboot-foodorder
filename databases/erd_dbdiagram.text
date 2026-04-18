@@ -1,0 +1,62 @@
+// Use DBML to define your database structure
+// https://dbdiagram.io/d
+
+Enum user_role {
+  ADMIN
+  CUSTOMER
+}
+
+Enum menu_category {
+  FOOD
+  DRINK
+  SNACK
+  DESSERT
+}
+
+Table users {
+  id integer [primary key, increment]
+  username varchar [unique, not null]
+  email varchar [unique, not null]
+  password varchar [not null]
+  role user_role [not null]
+  created_at timestamp
+}
+
+Table menus {
+  id integer [primary key, increment]
+  name varchar [not null]
+  description text
+  price double [not null]
+  category menu_category [not null]
+  stock integer [not null]
+  image_url varchar
+}
+
+Table carts {
+  id integer [primary key, increment]
+  user_id integer [not null]
+  menu_id integer [not null]
+  quantity integer [not null]
+}
+
+Table orders {
+  id integer [primary key, increment]
+  user_id integer [not null]
+  order_date timestamp
+  total_price double [not null]
+}
+
+Table order_items {
+  id integer [primary key, increment]
+  order_id integer [not null]
+  menu_id integer [not null]
+  quantity integer [not null]
+  price_at_buy double [not null] // Menyimpan harga saat dibeli (snapshot)
+}
+
+// Relationships
+Ref: users.id < carts.user_id
+Ref: menus.id < carts.menu_id
+Ref: users.id < orders.user_id
+Ref: orders.id < order_items.order_id
+Ref: menus.id < order_items.menu_id
