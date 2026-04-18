@@ -30,10 +30,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/menus/**")
-                        .hasAnyRole("ADMIN", "CUSTOMER")
-                        .requestMatchers("/api/menus/**").hasRole("ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/menu/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers("/api/menu/**").hasRole("ADMIN")
+                        .requestMatchers("/api/report/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -23,7 +23,7 @@ public class AuthController {
             @Valid @RequestBody AuthDTO.RegisterRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.<AuthDTO.RegisterResponse>builder()
-                        .message("User registered successfully")
+                        .message("Success Register")
                         .data(authService.register(request))
                         .build());
     }
@@ -33,7 +33,7 @@ public class AuthController {
             @Valid @RequestBody AuthDTO.LoginRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.<AuthDTO.LoginResponse>builder()
-                        .message("Login successful")
+                        .message("Success Login")
                         .data(authService.authenticate(request))
                         .build());
     }

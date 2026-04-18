@@ -29,6 +29,10 @@ public class MenuService {
     }
 
     public MenuDTO.MenuResponse createMenu(MenuDTO.MenuRequest request) {
+        menuRepository.findByName(request.getName()).ifPresent(menu -> {
+            throw new ResourceNotFoundException("Menu '" + request.getName() + "' already exists");
+        });
+
         Menu menu = new Menu();
         return saveMenu(menu, request);
     }
@@ -40,6 +44,8 @@ public class MenuService {
     }
 
     public void deleteMenu(Long id) {
+        menuRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Menu not found"));
         menuRepository.deleteById(id);
     }
 
