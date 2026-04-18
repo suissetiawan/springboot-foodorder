@@ -22,4 +22,7 @@ public class Order extends BaseEntity {
 
     @Column(name = "total_price")
     private Double totalPrice;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private java.util.List<OrderItem> orderItems;
 }

@@ -14,6 +14,9 @@ public class ReportDTO {
     public static class SalesReportResponse {
         private String period;
         private Double totalRevenue;
+        private String date;
+        private String monthName;
+        private Integer year;
     }
 
     @Data
