@@ -14,8 +14,9 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUser(User user);
 
-    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.createdAt >= :startDate AND o.status = 'PAID'")
-    Double calculateTotalSalesSince(@Param("startDate") LocalDateTime startDate);
+    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.createdAt BETWEEN :start AND :end AND o.status IN ('PAID', 'COMPLETED')")
+    Double calculateTotalSalesBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    // We can add more aggregation queries here later for reports
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.menu WHERE o.createdAt BETWEEN :start AND :end AND o.status IN ('PAID', 'COMPLETED')")
+    List<Order> findOrdersBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

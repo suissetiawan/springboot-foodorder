@@ -7,11 +7,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "order_items")
+@SQLDelete(sql = "UPDATE order_items SET is_deleted = true, deleted_at = NOW() WHERE id = ?")
 public class OrderItem extends BaseEntity {
 
     @ManyToOne
