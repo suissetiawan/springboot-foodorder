@@ -24,8 +24,6 @@ README.md
 HELP.md
 databases/
 report/
-mvnw
-mvnw.cmd
 
 # Local environment files
 .env
