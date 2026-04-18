@@ -24,8 +24,7 @@ public class ReportController {
                 BaseResponse.<ReportDTO.SalesReportResponse>builder()
                         .message("Daily sales report retrieved")
                         .data(reportService.getDailySalesReport())
-                        .build()
-        );
+                        .build());
     }
 
     @GetMapping("/sales/monthly")
@@ -34,8 +33,7 @@ public class ReportController {
                 BaseResponse.<ReportDTO.SalesReportResponse>builder()
                         .message("Monthly sales report retrieved")
                         .data(reportService.getMonthlySalesReport())
-                        .build()
-        );
+                        .build());
     }
 
     @GetMapping("/top-selling")
@@ -44,7 +42,6 @@ public class ReportController {
                 BaseResponse.<List<ReportDTO.TopSellingResponse>>builder()
                         .message("Top selling items report retrieved")
                         .data(reportService.getTopSellingItems())
-                        .build()
-        );
+                        .build());
     }
 }

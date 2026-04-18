@@ -2,6 +2,7 @@ package com.dibimbing.foodorder.service;
 
 import com.dibimbing.foodorder.dto.MenuDTO;
 import com.dibimbing.foodorder.entity.Menu;
+import com.dibimbing.foodorder.exception.ResourceNotFoundException;
 import com.dibimbing.foodorder.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class MenuService {
 
     public MenuDTO.MenuResponse getMenuById(Long id) {
         Menu menu = menuRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Menu not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Menu not found with id: " + id));
         return mapToResponse(menu);
     }
 
@@ -34,7 +35,7 @@ public class MenuService {
 
     public MenuDTO.MenuResponse updateMenu(Long id, MenuDTO.MenuRequest request) {
         Menu menu = menuRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Menu not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Menu not found"));
         return saveMenu(menu, request);
     }
 

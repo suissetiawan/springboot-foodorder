@@ -4,6 +4,8 @@ import com.dibimbing.foodorder.dto.AuthDTO;
 import com.dibimbing.foodorder.entity.User;
 import com.dibimbing.foodorder.enums.UserRole;
 import com.dibimbing.foodorder.repository.UserRepository;
+import com.dibimbing.foodorder.exception.BusinessException;
+import com.dibimbing.foodorder.exception.ConflictException;
 import com.dibimbing.foodorder.util.JwtGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,10 @@ public class AuthService {
 
     public AuthDTO.RegisterResponse register(AuthDTO.RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new ConflictException("Username already exists");
         }
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new ConflictException("Email already exists");
         }
 
         User user = new User();
@@ -52,7 +54,7 @@ public class AuthService {
                         request.getPassword()));
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException("User not found"));
 
         String jwtToken = jwtService.generateToken(user);
 

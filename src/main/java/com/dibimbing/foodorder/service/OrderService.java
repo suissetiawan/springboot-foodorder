@@ -3,6 +3,7 @@ package com.dibimbing.foodorder.service;
 import com.dibimbing.foodorder.dto.OrderDTO;
 import com.dibimbing.foodorder.entity.*;
 import com.dibimbing.foodorder.enums.OrderStatus;
+import com.dibimbing.foodorder.exception.BusinessException;
 import com.dibimbing.foodorder.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,13 @@ public class OrderService {
     public OrderDTO.OrderResponse checkout(User user) {
         List<Cart> cartItems = cartRepository.findByUser(user);
         if (cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty");
+            throw new BusinessException("Cart is empty");
         }
 
         for (Cart cartItem : cartItems) {
             Menu menu = cartItem.getMenu();
             if (menu.getStock() < cartItem.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for " + menu.getName());
+                throw new BusinessException("Insufficient stock for " + menu.getName());
             }
         }
 

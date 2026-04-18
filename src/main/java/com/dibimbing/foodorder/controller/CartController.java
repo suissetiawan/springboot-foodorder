@@ -21,53 +21,45 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<BaseResponse<List<CartDTO.CartResponse>>> getCart(
-            @AuthenticationPrincipal User user
-    ) {
+            @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(
                 BaseResponse.<List<CartDTO.CartResponse>>builder()
                         .message("Cart retrieved successfully")
                         .data(cartService.getUserCart(user))
-                        .build()
-        );
+                        .build());
     }
 
     @PostMapping
     public ResponseEntity<BaseResponse<CartDTO.CartResponse>> addToCart(
             @AuthenticationPrincipal User user,
-            @Valid @RequestBody CartDTO.CartRequest request
-    ) {
+            @Valid @RequestBody CartDTO.CartRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.<CartDTO.CartResponse>builder()
                         .message("Item added to cart successfully")
                         .data(cartService.addToCart(user, request))
-                        .build()
-        );
+                        .build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<CartDTO.CartResponse>> updateCart(
             @AuthenticationPrincipal User user,
             @PathVariable Long id,
-            @RequestParam Integer quantity
-    ) {
+            @RequestParam Integer quantity) {
         return ResponseEntity.ok(
                 BaseResponse.<CartDTO.CartResponse>builder()
                         .message("Cart updated successfully")
                         .data(cartService.updateCartItem(user, id, quantity))
-                        .build()
-        );
+                        .build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse<Void>> removeFromCart(
             @AuthenticationPrincipal User user,
-            @PathVariable Long id
-    ) {
+            @PathVariable Long id) {
         cartService.removeCartItem(user, id);
         return ResponseEntity.ok(
                 BaseResponse.<Void>builder()
                         .message("Item removed from cart successfully")
-                        .build()
-        );
+                        .build());
     }
 }
