@@ -2,6 +2,8 @@ services:
   app:
     image: suistwn/foodorder-api:latest
     container_name: api-foodorder
+    env_file:
+      - .env
     ports:
       - "8084:8080"
     restart: unless-stopped
