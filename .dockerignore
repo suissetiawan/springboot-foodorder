@@ -1,0 +1,30 @@
+# Build artifacts
+target/
+*.jar
+*.war
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Docker
+dockerfile
+docker-compose.yml
+.dockerignore
+
+# Project documentation and other files
+README.md
+HELP.md
+databases/
+report/
+
+# Local environment files
+.env
+.gemini/

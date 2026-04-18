@@ -1,14 +1,15 @@
 services:
   app:
-    build: .
     image: suistwn/foodorder-api:latest
     container_name: api-foodorder
+    env_file:
+      - .env
     ports:
       - "8084:8080"
     restart: unless-stopped
     networks:
-      - financial-tracker-network
+      - apps-network
 
 networks:
-  financial-tracker-network:
-    name: financial-tracker-network
+  apps-network:
+    name: apps-network
