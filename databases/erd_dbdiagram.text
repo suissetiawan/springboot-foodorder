@@ -13,12 +13,21 @@ Enum menu_category {
   DESSERT
 }
 
+Enum order_status {
+  PENDING
+  PAID
+  CANCELLED
+  COMPLETED
+}
+
 Table users {
   id integer [primary key, increment]
   username varchar [unique, not null]
   email varchar [unique, not null]
   password varchar [not null]
   role user_role [not null]
+  is_deleted boolean [default: false]
+  deleted_at timestamp
   created_at timestamp
 }
 
@@ -30,6 +39,8 @@ Table menus {
   category menu_category [not null]
   stock integer [not null]
   image_url varchar
+  is_deleted boolean [default: false]
+  deleted_at timestamp
 }
 
 Table carts {
@@ -37,13 +48,18 @@ Table carts {
   user_id integer [not null]
   menu_id integer [not null]
   quantity integer [not null]
+  is_deleted boolean [default: false]
+  deleted_at timestamp
 }
 
 Table orders {
   id integer [primary key, increment]
   user_id integer [not null]
-  order_date timestamp
+  status order_status [not null]
   total_price double [not null]
+  is_deleted boolean [default: false]
+  deleted_at timestamp
+  created_at timestamp
 }
 
 Table order_items {
@@ -52,6 +68,8 @@ Table order_items {
   menu_id integer [not null]
   quantity integer [not null]
   price_at_buy double [not null] // Menyimpan harga saat dibeli (snapshot)
+  is_deleted boolean [default: false]
+  deleted_at timestamp
 }
 
 // Relationships
