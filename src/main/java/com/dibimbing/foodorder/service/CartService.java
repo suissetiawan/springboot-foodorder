@@ -44,13 +44,17 @@ public class CartService {
             cart.setQuantity(cart.getQuantity() + request.getQuantity());
         }
 
+        if (cart.getQuantity() > menu.getStock()) {
+            throw new ResourceNotFoundException("Stock is not enough");
+        }
+
         return mapToResponse(cartRepository.save(cart));
     }
 
     @Transactional
     public CartDTO.CartResponse updateCartItem(User user, Long cartId, Integer quantity) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartId));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
 
         if (!cart.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Unauthorized access to cart item");
@@ -63,7 +67,7 @@ public class CartService {
     @Transactional
     public void removeCartItem(User user, Long cartId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartId));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
 
         if (!cart.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Unauthorized access to cart item");

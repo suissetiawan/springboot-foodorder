@@ -6,6 +6,8 @@ import com.dibimbing.foodorder.entity.User;
 import com.dibimbing.foodorder.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class CartController {
             @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(
                 BaseResponse.<List<CartDTO.CartResponse>>builder()
-                        .message("Cart retrieved successfully")
+                        .message("Success Get Cart")
                         .data(cartService.getUserCart(user))
                         .build());
     }
@@ -33,9 +35,9 @@ public class CartController {
     public ResponseEntity<BaseResponse<CartDTO.CartResponse>> addToCart(
             @AuthenticationPrincipal User user,
             @Valid @RequestBody CartDTO.CartRequest request) {
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.CREATED).body(
                 BaseResponse.<CartDTO.CartResponse>builder()
-                        .message("Item added to cart successfully")
+                        .message("Success Add To Cart")
                         .data(cartService.addToCart(user, request))
                         .build());
     }
@@ -47,7 +49,7 @@ public class CartController {
             @RequestParam Integer quantity) {
         return ResponseEntity.ok(
                 BaseResponse.<CartDTO.CartResponse>builder()
-                        .message("Cart updated successfully")
+                        .message("Success Update Cart")
                         .data(cartService.updateCartItem(user, id, quantity))
                         .build());
     }
@@ -59,7 +61,7 @@ public class CartController {
         cartService.removeCartItem(user, id);
         return ResponseEntity.ok(
                 BaseResponse.<Void>builder()
-                        .message("Item removed from cart successfully")
+                        .message("Success Remove Cart")
                         .build());
     }
 }
