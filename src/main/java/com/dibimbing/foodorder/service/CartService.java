@@ -31,7 +31,7 @@ public class CartService {
     @Transactional
     public CartDTO.CartResponse addToCart(User user, CartDTO.CartRequest request) {
         Menu menu = menuRepository.findById(request.getMenuId())
-                .orElseThrow(() -> new ResourceNotFoundException("Menu not found with id: " + request.getMenuId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Menu not found"));
 
         Cart cart = cartRepository.findByUserAndMenuId(user, request.getMenuId())
                 .orElse(new Cart());
