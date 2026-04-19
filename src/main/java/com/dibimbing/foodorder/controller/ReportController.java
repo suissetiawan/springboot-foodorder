@@ -2,6 +2,7 @@ package com.dibimbing.foodorder.controller;
 
 import com.dibimbing.foodorder.dto.BaseResponse;
 import com.dibimbing.foodorder.dto.ReportDTO;
+import com.dibimbing.foodorder.enums.ReportType;
 import com.dibimbing.foodorder.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,7 +56,7 @@ public class ReportController {
 
     @GetMapping("/download")
     public ResponseEntity<byte[]> downloadReport(
-            @RequestParam(defaultValue = "daily") String type,
+            @RequestParam(defaultValue = "DAILY") ReportType type,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam(required = false) Integer month,
             @RequestParam(required = false) Integer year) {
@@ -63,7 +64,7 @@ public class ReportController {
         byte[] pdfData;
         String filename;
 
-        if ("monthly".equalsIgnoreCase(type)) {
+        if (ReportType.MONTHLY.equals(type)) {
             pdfData = reportService.generateMonthlyPDF(month, year);
             filename = "monthly_report_" + (month != null ? month : "current") + "_"
                     + (year != null ? year : "current") + ".pdf";
