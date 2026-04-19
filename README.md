@@ -13,7 +13,7 @@ A robust and feature-rich Food Ordering System API built with Spring Boot 3.x. T
 *   **Advanced Reporting**: 
     *   Daily & Monthly sales reports with date filtering.
     *   Top 5 selling items analysis.
-    *   **Export formats**: Human-readable Plain Text (.txt) and Styled HTML (.html).
+    *   **Export formats**: Professional PDF (.pdf) with styled tables and grand revenue analysis.
 *   **Data Seeding**: Built-in seeder to generate 15+ realistic orders for testing.
 *   **Containerized Environment**: Ready-to-use Docker and Docker Compose configuration.
 
@@ -23,7 +23,7 @@ A robust and feature-rich Food Ordering System API built with Spring Boot 3.x. T
 *   **Database**: MySQL
 *   **Security**: Spring Security 6, JWT (jjwt)
 *   **Data Access**: Spring Data JPA, Hibernate
-*   **Utility**: Lombok, Jackson (Auto-hiding null fields)
+*   **Utility**: Lombok, Jackson (Auto-hiding null fields), OpenPDF (Reporting)
 *   **DevOps**: Docker, Docker Compose
 
 ## 📦 Database Schema
@@ -64,8 +64,7 @@ docker-compose up --build
 ### Reporting (Admin Only)
 *   `GET /api/report/daily`: Daily sales JSON
 *   `GET /api/report/monthly`: Monthly sales JSON
-*   `GET /api/report/daily/download`: Download .txt report
-*   `GET /api/report/daily/html`: Download .html report
+*   `GET /api/report/download`: Unified PDF export (`?type=daily|monthly&date=...&month=...&year=...`) 
 *   `GET /api/report/seed-data`: Generate 15 sample orders
 
 ## 📂 Project Structure
