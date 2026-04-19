@@ -84,6 +84,8 @@ public class ReportService {
         LocalDateTime end = date.atTime(LocalTime.MAX);
 
         List<Order> orders = orderRepository.findOrdersBetween(start, end);
+        log.info("Generating Daily PDF for date: {}. Range: {} to {}. Found {} orders.", date, start, end, orders.size());
+        
         byte[] content = ReportUtil.buildPdfReport(orders, "Daily Sales Report - " + date);
 
         saveReportToFile("daily_report_" + date + ".pdf", content);
