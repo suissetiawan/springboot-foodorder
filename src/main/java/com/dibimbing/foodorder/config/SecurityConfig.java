@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**")
+                        .requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**",
+                                "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/menu/**")
                         .hasAnyRole("ADMIN", "CUSTOMER")
@@ -61,8 +62,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:8084",
                 "http://localhost:8080",
-                "https://demo2.suissetiawan.my.id"
-        ));
+                "https://demo2.suissetiawan.my.id"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
