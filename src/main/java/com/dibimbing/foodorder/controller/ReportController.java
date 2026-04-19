@@ -53,57 +53,28 @@ public class ReportController {
                         .build());
     }
 
-    @GetMapping("/daily/download")
-    public ResponseEntity<byte[]> downloadDailySalesReport(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        byte[] txtData = reportService.generateDailyTXT(date);
-        String filename = "daily_report_" + (date != null ? date : LocalDate.now()) + ".txt";
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(txtData);
-    }
-
-    @GetMapping("/monthly/download")
-    public ResponseEntity<byte[]> downloadMonthlySalesReport(
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadReport(
+            @RequestParam(defaultValue = "daily") String type,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam(required = false) Integer month,
             @RequestParam(required = false) Integer year) {
-        byte[] txtData = reportService.generateMonthlyTXT(month, year);
-        String filename = "monthly_report_" + (month != null ? month : "current") + "_"
-                + (year != null ? year : "current")
-                + ".txt";
+
+        byte[] pdfData;
+        String filename;
+
+        if ("monthly".equalsIgnoreCase(type)) {
+            pdfData = reportService.generateMonthlyPDF(month, year);
+            filename = "monthly_report_" + (month != null ? month : "current") + "_"
+                    + (year != null ? year : "current") + ".pdf";
+        } else {
+            pdfData = reportService.generateDailyPDF(date);
+            filename = "daily_report_" + (date != null ? date : LocalDate.now()) + ".pdf";
+        }
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(txtData);
-    }
-
-    @GetMapping("/daily/html")
-    public ResponseEntity<byte[]> downloadDailySalesReportHtml(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        byte[] htmlData = reportService.generateDailyHTML(date);
-        String filename = "daily_report_" + (date != null ? date : LocalDate.now()) + ".html";
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-                .contentType(MediaType.TEXT_HTML)
-                .body(htmlData);
-    }
-
-    @GetMapping("/monthly/html")
-    public ResponseEntity<byte[]> downloadMonthlySalesReportHtml(
-            @RequestParam(required = false) Integer month,
-            @RequestParam(required = false) Integer year) {
-        byte[] htmlData = reportService.generateMonthlyHTML(month, year);
-        String filename = "monthly_report_" + (month != null ? month : "current") + "_"
-                + (year != null ? year : "current")
-                + ".html";
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-                .contentType(MediaType.TEXT_HTML)
-                .body(htmlData);
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(pdfData);
     }
 }

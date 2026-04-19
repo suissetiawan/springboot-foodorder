@@ -77,20 +77,20 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
-    public byte[] generateDailyTXT(LocalDate date) {
+    public byte[] generateDailyPDF(LocalDate date) {
         if (date == null)
             date = LocalDate.now();
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
 
         List<Order> orders = orderRepository.findOrdersBetween(start, end);
-        byte[] content = ReportUtil.buildTextReport(orders, "Daily Sales Report - " + date);
+        byte[] content = ReportUtil.buildPdfReport(orders, "Daily Sales Report - " + date);
 
-        saveReportToFile("daily_report_" + date + ".txt", content);
+        saveReportToFile("daily_report_" + date + ".pdf", content);
         return content;
     }
 
-    public byte[] generateMonthlyTXT(Integer month, Integer year) {
+    public byte[] generateMonthlyPDF(Integer month, Integer year) {
         LocalDate now = LocalDate.now();
         if (month == null)
             month = now.getMonthValue();
@@ -103,41 +103,9 @@ public class ReportService {
 
         List<Order> orders = orderRepository.findOrdersBetween(start, end);
         String monthName = firstDay.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        byte[] content = ReportUtil.buildTextReport(orders, "Monthly Sales Report - " + monthName + " " + year);
+        byte[] content = ReportUtil.buildPdfReport(orders, "Monthly Sales Report - " + monthName + " " + year);
 
-        saveReportToFile("monthly_report_" + month + "_" + year + ".txt", content);
-        return content;
-    }
-
-    public byte[] generateDailyHTML(LocalDate date) {
-        if (date == null)
-            date = LocalDate.now();
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.atTime(LocalTime.MAX);
-
-        List<Order> orders = orderRepository.findOrdersBetween(start, end);
-        byte[] content = ReportUtil.buildHtmlReport(orders, "Daily Sales Report - " + date);
-
-        saveReportToFile("daily_report_" + date + ".html", content);
-        return content;
-    }
-
-    public byte[] generateMonthlyHTML(Integer month, Integer year) {
-        LocalDate now = LocalDate.now();
-        if (month == null)
-            month = now.getMonthValue();
-        if (year == null)
-            year = now.getYear();
-
-        LocalDate firstDay = LocalDate.of(year, month, 1);
-        LocalDateTime start = firstDay.atStartOfDay();
-        LocalDateTime end = firstDay.plusMonths(1).atStartOfDay().minusNanos(1);
-
-        List<Order> orders = orderRepository.findOrdersBetween(start, end);
-        String monthName = firstDay.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        byte[] content = ReportUtil.buildHtmlReport(orders, "Monthly Sales Report - " + monthName + " " + year);
-
-        saveReportToFile("monthly_report_" + month + "_" + year + ".html", content);
+        saveReportToFile("monthly_report_" + month + "_" + year + ".pdf", content);
         return content;
     }
 
